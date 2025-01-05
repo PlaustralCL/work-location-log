@@ -7,18 +7,19 @@ class Database:
         self.con.execute('PRAGMA foreign_keys = ON')
         self.cur = self.con.cursor()
 
-    def get_most_recent_days(self, num_of_days: int = 15) -> list:
+    def get_recent_days(self, num_of_days: int = 15) -> list:
         """
         Queries the database and returns the location data about the most
         recent work days. The number of days is determined by the num_of_days
         parameter. It defaults to 15 days, (approximately 3 weeks of data).
+        Returns a list of tuples. Each tuple is of the form (work_date, location)
         :param num_of_days: The number of days to return. The default value is 15.
-        :return: A list of tuples, where each tuple represents a work day.
+        :return: A list of tuples, where tuple is of the form (work_date, location).
         """
         # noinspection SqlNoDataSourceInspection
         res = self.cur.execute(
             """
-            SELECT *
+            SELECT work_date, location
             FROM WorkDay
             ORDER BY work_date DESC
             Limit ?;

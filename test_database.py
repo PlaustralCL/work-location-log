@@ -12,12 +12,12 @@ class TestDatabase(unittest.TestCase):
         self.db.close_connection()
 
     def test_get_most_recent_days_default(self):
-        days = self.db.get_most_recent_days()
+        days = self.db.get_recent_days()
         expected = 15
         self.assertEqual(len(days), expected)
 
     def test_get_most_recent_days_10(self):
-        days = self.db.get_most_recent_days(10)
+        days = self.db.get_recent_days(10)
         expected = 10
         self.assertEqual(len(days), expected)
 
