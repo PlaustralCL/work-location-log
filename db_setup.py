@@ -37,9 +37,6 @@ def create_tables() -> None:
         """
          CREATE TABLE IF NOT EXISTS WorkDay (
             work_date TEXT NOT NULL,
-            year INTEGER NOT NULL, 
-            month INTEGER NOT NULL,
-            day INTEGER NOT NULL,
             week_number TEXT NOT NULL,
             location TEXT NOT NULL,
             notes TEXT NULL, 
@@ -135,13 +132,16 @@ def fill_workday_table() -> None:
             year = int(row["Year"])
             month = int(row["Month"])
             day = int(row["Day"])
-            location = row["Location"]
             work_date = date(year, month, day)
+
             iso_year = str(work_date.isocalendar().year)
             iso_week = str(work_date.isocalendar().week)
             iso_week = f"{iso_week:>02}"
             week_number = f"{iso_year}-{iso_week}"
-            work_day = (year, month, day, week_number, location)
+
+            work_date = work_date.isoformat()
+            location = row["Location"]
+            work_day = (work_date, week_number, location)
             data.append(work_day)
 
     con = sqlite3.connect('./Data/worklocation.db')
@@ -152,8 +152,8 @@ def fill_workday_table() -> None:
     cur.executemany(
         """
         INSERT OR IGNORE INTO 
-            WorkDay(year, month, day, week_number, location) 
-            VALUES (?, ?, ?, ?, ?)
+            WorkDay(work_date, week_number, location) 
+            VALUES (?, ?, ?)
         """, data
     )
     con.commit()
@@ -164,3 +164,5 @@ if __name__ == '__main__':
     fill_week_table(start_year=2023, end_year=2027)
     fill_location_table()
     fill_workday_table()
+
+
