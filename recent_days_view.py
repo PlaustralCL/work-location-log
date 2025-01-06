@@ -12,8 +12,8 @@ class RecentDaysView(tk.Frame):
                                       font=("TkDefaultFont", 20))
         self.header_label.pack()
 
-        self.db = Database()
-        days = self.db.get_recent_days()
+        db = Database()
+        days = db.get_recent_days()
 
         self.treeview = ttk.Treeview(self, show='headings', height=15, selectmode='browse')
         self.treeview['columns'] = ('date', 'location')
@@ -35,7 +35,7 @@ class RecentDaysView(tk.Frame):
                          command=self.revise_location)
         self.btn.pack(pady=10)
 
-        # self.db.close_connection()
+        db.close_connection()
 
     def get_selected_item_id(self):
         selected_item = self.treeview.selection()
@@ -55,12 +55,13 @@ class RecentDaysView(tk.Frame):
             else:
                 new_location = 'office'
 
-            self.db.set_location(work_date, new_location)
-            workday = self.db.get_work_day(work_date)
+            db = Database()
+            db.set_location(work_date, new_location)
+            workday = db.get_work_day(work_date)
             location = workday[2]
             print(workday)
             self.treeview.item(item_id, values=(work_date, location))
-
+            db.close_connection()
 
 
 
