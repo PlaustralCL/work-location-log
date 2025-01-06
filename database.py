@@ -55,12 +55,15 @@ class Database:
         """
         Gets the work day information of the provided work_date
         :param work_date: ISO formatted date string
-        :return: tuple of the row from the WorkDay table
+        :return: tuple of the row from the WorkDay table: (work_date, week_number, location)
         """
         # noinspection SqlNoDataSourceInspection
         res = self.cur.execute(
             """
-            SELECT *
+            SELECT 
+                work_date, 
+                week_number, 
+                location
             FROM WorkDay
             WHERE work_date = ?
             """, (work_date,)
