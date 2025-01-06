@@ -12,15 +12,57 @@ class RecentDaysView(tk.Frame):
                                       font=("TkDefaultFont", 20))
         self.header_label.pack()
 
-        db = Database()
-        days = db.get_recent_days()
+        self.db = Database()
+        days = self.db.get_recent_days()
 
-        self.listbox = tk.Listbox(self, height=15, width=30,)
-        self.listbox.pack()
+        self.treeview = ttk.Treeview(self, show='headings', height=15, selectmode='browse')
+        self.treeview['columns'] = ('date', 'location')
+        self.treeview.heading('date', text="Date")
+        self.treeview.heading('location', text="Location")
+        self.treeview.column('date', width=100, anchor='center')
+        self.treeview.column('location', width=100, anchor='center')
         for day in days:
-            self.listbox.insert(tk.END, day)
+            self.treeview.insert("", "end", values=day)
 
-        db.close_connection()
+        self.treeview.pack()
+
+        btn_style = ttk.Style()
+        btn_style.configure("btn.TButton", padding=(10, 5))
+
+        self.btn = ttk.Button(self,
+                         text="Revise Location",
+                         style="btn.TButton",
+                         command=self.revise_location)
+        self.btn.pack(pady=10)
+
+        # self.db.close_connection()
+
+    def get_selected_item_id(self):
+        selected_item = self.treeview.selection()
+        item_id = None
+        if selected_item:
+            item_id = self.treeview.focus()
+        return item_id
+
+    def revise_location(self):
+        item_id = self.get_selected_item_id()
+        if item_id:
+            # print( self.treeview.item(item_id, 'values'))
+            work_date = self.treeview.item(item_id, 'values')[0]
+            current_location = self.treeview.item(item_id, 'values')[1]
+            if current_location == 'office':
+                new_location = 'remote'
+            else:
+                new_location = 'office'
+
+            self.db.set_location(work_date, new_location)
+            workday = self.db.get_work_day(work_date)
+            location = workday[2]
+            print(workday)
+            self.treeview.item(item_id, values=(work_date, location))
+
+
+
 
 
 
@@ -29,7 +71,7 @@ class RecentDaysView(tk.Frame):
 if __name__ == "__main__":
     root = tk.Tk()
     root.title("Recent Days View")
-    root.geometry("300x400")
+    root.geometry("300x500")
     frame = RecentDaysView(root)
     frame.pack()
     root.mainloop()
