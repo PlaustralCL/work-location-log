@@ -39,7 +39,6 @@ def create_tables() -> None:
             work_date TEXT NOT NULL,
             week_number TEXT NOT NULL,
             location TEXT NOT NULL,
-            notes TEXT NULL, 
             PRIMARY KEY (work_date),
             FOREIGN KEY (week_number) REFERENCES Week (week_number),
             FOREIGN KEY (location) REFERENCES Location (location)
