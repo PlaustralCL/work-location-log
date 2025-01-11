@@ -95,7 +95,7 @@ class Database:
         :param location: Location string. Needs to match one of the existing
         locations in the Location table.
         :raises IntegrityError: If work_date already exists or if week_number
-        or location is not are not in the Week or Location tables.
+        or location are not in the Week or Location tables.
         """
         try:
         # noinspection SqlNoDataSourceInspection
