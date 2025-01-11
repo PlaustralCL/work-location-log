@@ -64,8 +64,8 @@ class Database:
         except (sqlite3.IntegrityError, sqlite3.DatabaseError) as err:
             logger.error(f"{err=}. work_date={work_date} new_location={new_location}")
             raise
-
         self.con.commit()
+        logger.info(f"work_date={work_date} new_location={new_location}")
 
     def get_work_day(self, work_date: str) -> tuple[str, str, str]:
         """
@@ -97,7 +97,6 @@ class Database:
         :raises IntegrityError: If work_date already exists or if week_number
         or location is not are not in the Week or Location tables.
         """
-
         try:
         # noinspection SqlNoDataSourceInspection
             self.cur.execute(
@@ -111,6 +110,7 @@ class Database:
             raise
 
         self.con.commit()
+        logger.info(f"work_date={work_date} week_number={week_number} location={location}")
 
     def close(self) -> None:
         """

@@ -3,6 +3,7 @@ from pathlib import Path
 from sqlite3 import DatabaseError
 import shutil
 import os
+import logging
 
 
 from database import Database
@@ -83,6 +84,35 @@ class TestDatabase(unittest.TestCase):
         self.db.set_location(work_date="2024-11-23",
                              new_location='office')
         self.assertIsNone(self.db.get_work_day("2024-11-23"))
+
+    def test_set_location_error_logging(self):
+        work_day = self.db.get_work_day("2024-11-25")
+        self.assertEqual('office', work_day[2])
+        with self.assertLogs('database', level=logging.ERROR) as cm:
+            try:
+                self.db.set_location(work_date="2024-11-25",
+                                     new_location='New York')
+                self.fail("Should have raised DatabaseError")
+            except:
+                if cm.output:
+                    output = cm.output[0].split(":")
+                    level = output[0]
+                    self.assertEqual('ERROR', level)
+                else:
+                    self.fail("Should have logged something")
+
+    def test_set_location_info_logging(self):
+        work_day = self.db.get_work_day("2024-11-25")
+        self.assertEqual('office', work_day[2])
+        with self.assertLogs('database', level=logging.INFO) as cm:
+            try:
+                self.db.set_location(work_date="2024-11-25",
+                                 new_location='remote')
+                output = cm.output[0].split(":")
+                level = output[0]
+                self.assertEqual('INFO', level)
+            except:
+                self.fail("Should not have raised an exception")
 
     def test_new_work_day(self):
         self.assertIsNone(self.db.get_work_day("2025-01-01"))
