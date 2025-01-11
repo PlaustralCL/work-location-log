@@ -1,15 +1,26 @@
 import unittest
+from pathlib import Path
 from sqlite3 import DatabaseError
+import shutil
+import os
+
 
 from database import Database
 
 
 class TestDatabase(unittest.TestCase):
-    def setUp(self):
-        self.db = Database()
+    @classmethod
+    def setUpClass(cls):
+        data_folder = Path("./Data")
+        source_file = data_folder / "test_db.db"
+        cls.dest_file = data_folder / "test_db_copy.db"
+        shutil.copy(source_file, cls.dest_file)
+        cls.db = Database(cls.dest_file.resolve())
 
-    def tearDown(self):
-        self.db.close_connection()
+    @classmethod
+    def tearDownClass(cls):
+        cls.db.close()
+        os.remove(cls.dest_file)
 
     def test_get_most_recent_days_default(self):
         days = self.db.get_recent_days()
