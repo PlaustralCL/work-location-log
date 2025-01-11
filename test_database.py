@@ -37,6 +37,10 @@ class TestDatabase(unittest.TestCase):
         self.assertEqual(work_day[0], "2024-11-25")
         self.assertEqual(work_day[2], "office")
 
+    def test_get_work_day_not_exist(self):
+        work_day = self.db.get_work_day("2024-12-25")
+        self.assertIsNone(work_day)
+
     def test_set_location_same_location(self):
         work_day = self.db.get_work_day("2024-11-25")
         current_location = work_day[2]
@@ -59,10 +63,6 @@ class TestDatabase(unittest.TestCase):
         work_day = self.db.get_work_day("2024-11-25")
         self.assertEqual(new_location, work_day[2])
 
-        # reset database to original condition
-        self.db.set_location(work_date="2024-11-25",
-                             new_location=original_location)
-
     def test_set_location_invalid_location(self):
         work_day = self.db.get_work_day("2024-11-25")
         original_location = work_day[2]
@@ -83,6 +83,31 @@ class TestDatabase(unittest.TestCase):
         self.db.set_location(work_date="2024-11-23",
                              new_location='office')
         self.assertIsNone(self.db.get_work_day("2024-11-23"))
+
+    def test_new_work_day(self):
+        self.assertIsNone(self.db.get_work_day("2025-01-01"))
+        self.db.new_work_day(work_date="2025-01-01",
+                             week_number="2025-01",
+                             location="remote")
+        self.assertIsNotNone(self.db.get_work_day("2025-01-01"))
+        self.assertEqual(3, len(self.db.get_work_day("2025-01-01")))
+        self.assertEqual("remote", self.db.get_work_day("2025-01-01")[2])
+
+    def test_new_work_day_duplicate_day(self):
+        self.assertIsNotNone(self.db.get_work_day("2024-11-19"))
+        with self.assertRaises(DatabaseError):
+            self.db.new_work_day(work_date="2024-11-19",
+                                 week_number="2024-47",
+                                 location="office")
+
+    def test_new_work_day_invalid_location(self):
+        self.assertIsNone(self.db.get_work_day("2025-01-02"))
+        with self.assertRaises(DatabaseError):
+            self.db.new_work_day(work_date="2025-01-02",
+                                 week_number="2025-01",
+                                 location="New York")
+        self.assertIsNone(self.db.get_work_day("2025-01-02"))
+
 
 
 

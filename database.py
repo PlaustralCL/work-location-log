@@ -1,5 +1,6 @@
 import logging
 import sqlite3
+from pathlib import Path
 
 logger = logging.getLogger(__name__)
 # TODO: Add file for logging
@@ -86,7 +87,32 @@ class Database:
         )
         return res.fetchone()
 
-    def close_connection(self) -> None:
+    def new_work_day(self, work_date: str, week_number: str, location: str) -> None:
+        """
+        Sets the work day information of the provided work_date
+        :param work_date: A date string in the format yyyy-mm-dd
+        :param week_number: Week number string in the format yyyy-ww
+        :param location: Location string. Needs to match one of the existing
+        locations in the Location table.
+        :raises IntegrityError: If work_date already exists or if week_number
+        or location is not are not in the Week or Location tables.
+        """
+
+        try:
+        # noinspection SqlNoDataSourceInspection
+            self.cur.execute(
+                """
+                INSERT INTO WorkDay
+                VALUES (?, ?, ?)
+                """,(work_date, week_number, location)
+            )
+        except(sqlite3.IntegrityError, sqlite3.DatabaseError) as err:
+            logger.error(f"{err=}. work_date={work_date} week_number={week_number} location={location}")
+            raise
+
+        self.con.commit()
+
+    def close(self) -> None:
         """
         Closes the connection to the database.
         """
