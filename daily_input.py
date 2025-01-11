@@ -1,8 +1,9 @@
-import sys
 import tkinter as tk
 from tkinter import ttk
+from tkinter import messagebox
 from datetime import date
-import sqlite3
+
+from database import Database
 
 class DailyInput(tk.Tk):
     """
@@ -12,7 +13,9 @@ class DailyInput(tk.Tk):
     """
     def __init__(self):
         super().__init__()
+        self.db = Database()
 
+        # GUI
         self.title("Daily Input")
         self.geometry("175x150")
         self.resizable(width=False, height=False)
@@ -43,33 +46,32 @@ class DailyInput(tk.Tk):
 
     def set_location(self, location: str) -> None:
         """
-        Updates the database with the given location.
+        Updates the database with the given location. If a location has
+        already been saved for the current work_date, then a message box is
+        shown and no updates to the database are made. Use the recent_days_view
+        if a revision to the location is needed.
         :param location: The work location for the current work day.
         """
-        year = self.today.year
-        month = self.today.month
-        day = self.today.day
+        work_date = self.today.isoformat()
         iso_year = str(self.today.isocalendar().year)
         iso_week = self.today.isocalendar().week
-        week_number = f'{iso_year}-{iso_week}'
-        work_day = (year, month, day, week_number, location)
+        week_number = f'{iso_year}-{iso_week:>02}'
+        if not self.db.get_work_day(work_date=work_date):
+            self.db.new_work_day(work_date=work_date,
+                                 week_number=week_number,
+                                 location=location)
+        else:
+            messagebox.showinfo(message=f"A location for {work_date} was already recorded.")
 
-        con = sqlite3.connect('worklocation.db')
-        con.execute('PRAGMA foreign_keys = ON')
-        cur = con.cursor()
+        self.db.close()
+        self.destroy()
 
-        # noinspection SqlNoDataSourceInspection
-        cur.execute(
-            """
-            INSERT OR IGNORE INTO
-                WorkDay(year, month, day, week_number, location)
-                VALUES (?, ?, ?, ?, ?)
-            """, work_day
-        )
-        con.commit()
-        con.close()
-        sys.exit(0)
+    def on_close(self):
+        self.db.close()
+        root.destroy()
+
 
 if __name__ == "__main__":
     root = DailyInput()
+    root.protocol("WM_DELETE_WINDOW", root.on_close)
     root.mainloop()
