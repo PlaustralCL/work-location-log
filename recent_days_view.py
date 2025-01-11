@@ -35,7 +35,7 @@ class RecentDaysView(tk.Frame):
                          command=self.revise_location)
         self.btn.pack(pady=10)
 
-        db.close_connection()
+        db.close()
 
     def get_selected_item_id(self):
         selected_item = self.treeview.selection()
@@ -61,7 +61,7 @@ class RecentDaysView(tk.Frame):
             location = workday[2]
             print(workday)
             self.treeview.item(item_id, values=(work_date, location))
-            db.close_connection()
+            db.close()
 
 
 
