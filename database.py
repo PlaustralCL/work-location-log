@@ -1,6 +1,15 @@
-from datetime import date
+import logging
 import sqlite3
 
+logger = logging.getLogger(__name__)
+# TODO: Add file for logging
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s | %(levelname)s | %(name)s | %(funcName)s >>> %(message)s',
+    datefmt='%Y-%m-%d %H:%M:%S',
+    )
+
+# TODO: Log changes to the database
 class Database:
     def __init__(self, file_path: Path = Path('Data/worklocation.db')) -> None:
         """
@@ -52,8 +61,7 @@ class Database:
                 """, (new_location, work_date)
             )
         except (sqlite3.IntegrityError, sqlite3.DatabaseError) as err:
-            print(f"Unexpected {err=}")
-            print(f"work_date={work_date}, new_location={new_location}")
+            logger.error(f"{err=}. work_date={work_date} new_location={new_location}")
             raise
 
         self.con.commit()
