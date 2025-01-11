@@ -37,7 +37,11 @@ class RecentDaysView(tk.Frame):
 
 
 
-    def get_selected_item_id(self):
+    def get_selected_item_id(self) -> str:
+        """
+        Finds and returns the id of the item selected in the treeview.
+        :return: A string representing the selected item id
+        """
         selected_item = self.treeview.selection()
         item_id = None
         if selected_item:
@@ -45,9 +49,12 @@ class RecentDaysView(tk.Frame):
         return item_id
 
     def revise_location(self):
+        """
+
+        :return:
+        """
         item_id = self.get_selected_item_id()
         if item_id:
-            # print( self.treeview.item(item_id, 'values'))
             work_date = self.treeview.item(item_id, 'values')[0]
             current_location = self.treeview.item(item_id, 'values')[1]
             if current_location == 'office':
@@ -58,7 +65,6 @@ class RecentDaysView(tk.Frame):
             self.db.set_location(work_date, new_location)
             workday = self.db.get_work_day(work_date)
             location = workday[2]
-            print(workday)
             self.treeview.item(item_id, values=(work_date, location))
 
     def on_close(self):
