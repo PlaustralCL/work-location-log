@@ -2,8 +2,15 @@ from datetime import date
 import sqlite3
 
 class Database:
-    def __init__(self):
-        self.con = sqlite3.connect('Data/worklocation.db')
+    def __init__(self, file_path: Path = Path('Data/worklocation.db')) -> None:
+        """
+        Creates a connection to the database. The connection should be closed
+        it is no longer needed by using the close() method.
+        :param file_path: A path the database file. A default path is using
+        worklocation.db is used is no parameter is passed.
+        """
+
+        self.con = sqlite3.connect(str(file_path))
         self.con.execute('PRAGMA foreign_keys = ON')
         self.cur = self.con.cursor()
 
