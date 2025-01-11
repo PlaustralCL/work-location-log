@@ -58,11 +58,12 @@ class Database:
 
         self.con.commit()
 
-    def get_work_day(self, work_date: str) -> tuple:
+    def get_work_day(self, work_date: str) -> tuple[str, str, str]:
         """
         Gets the work day information of the provided work_date
-        :param work_date: ISO formatted date string
-        :return: tuple of the row from the WorkDay table: (work_date, week_number, location)
+        :param work_date: ISO formatted date string, yyyy-mm-dd
+        :return: Returns a tuple of the WorkDay table, (work_date, week_number, location),
+        if the work_date is present in the database. Otherwise, returns None.
         """
         # noinspection SqlNoDataSourceInspection
         res = self.cur.execute(
