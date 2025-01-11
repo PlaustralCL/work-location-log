@@ -1,6 +1,9 @@
+import sqlite3
 import tkinter as tk
 from tkinter import ttk
+from tkinter import messagebox
 from database import Database
+from sqlite3 import IntegrityError
 
 class RecentDaysView(tk.Frame):
     def __init__(self, parent, *args, **kwargs):
@@ -50,19 +53,23 @@ class RecentDaysView(tk.Frame):
 
     def revise_location(self):
         """
-
-        :return:
+        Revised the location of the day in the database. The location will
+        toggle between 'office' and 'remote'.
         """
         item_id = self.get_selected_item_id()
         if item_id:
             work_date = self.treeview.item(item_id, 'values')[0]
             current_location = self.treeview.item(item_id, 'values')[1]
+            # TODO: use the locations in the database instead of hardcoding them
             if current_location == 'office':
                 new_location = 'remote'
             else:
                 new_location = 'office'
+            try:
+                self.db.set_location(work_date, new_location)
+            except sqlite3.IntegrityError:
+                messagebox.showwarning(message=f"Not a valid location. No changes made.")
 
-            self.db.set_location(work_date, new_location)
             workday = self.db.get_work_day(work_date)
             location = workday[2]
             self.treeview.item(item_id, values=(work_date, location))
