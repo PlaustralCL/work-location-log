@@ -139,8 +139,8 @@ class TestDatabase(unittest.TestCase):
         self.assertIsNone(self.db.get_work_day("2025-01-02"))
 
     def test_get_year_average(self):
-        self.assertEqual(2.9,self.db.get_year_average(year=2024))
-        self.assertEqual(2.0, self.db.get_year_average(year=2023))
+        self.assertEqual(2.9,self.db.get_ytd_average(year=2024, end_week="2024-52"))
+        self.assertEqual(2.0, self.db.get_ytd_average(year=2023, end_week="2023-52"))
 
 
 

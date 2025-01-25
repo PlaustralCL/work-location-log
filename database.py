@@ -113,13 +113,18 @@ class Database:
         logger.info(f"work_date={work_date} week_number={week_number} location={location}")
 
     # noinspection SqlNoDataSourceInspection
-    def get_year_average(self, year: int) -> float :
-        """Get the weekly average for the given year. The week is based off of
-        the year in the ISO week_number.
-        :param year: The four digit year for which to get the average
+    def get_ytd_average(self, year: int, end_week: str) -> float :
+        """Get the weekly average for the given year, through the current date.
+        If the year is complete, the average will be for the full year.
+        A week is determined to be in a given year based on the year of ISO
+        week.
+        :param year: The year to calculate the average for
+        :param end_week: The last week to include in the calculation, in ISO
+        week format: yyyy-ww
         :return: The weekly average for the given year. If the year is not in
         the database, None is returned.
         """
+        start_week = str(year) + "-01"
         res = self.cur.execute(
             """
             SELECT 
@@ -130,11 +135,12 @@ class Database:
                     COUNT(location) as office_count    
                 FROM WorkDay
                 WHERE 
-                    week_number LIKE ? AND
+                    week_number >= ? AND
+                    week_number <= ? AND
                     location = 'office'
                 GROUP BY week_number
             )
-           """, (str(year) + '%',)
+           """, (str(year), end_week)
         )
         return res.fetchone()[0]
 
