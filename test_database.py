@@ -138,6 +138,9 @@ class TestDatabase(unittest.TestCase):
                                  location="New York")
         self.assertIsNone(self.db.get_work_day("2025-01-02"))
 
+    def test_get_year_average(self):
+        self.assertEqual(2.9,self.db.get_year_average(year=2024))
+        self.assertEqual(2.0, self.db.get_year_average(year=2023))
 
 
 

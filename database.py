@@ -112,6 +112,32 @@ class Database:
         self.con.commit()
         logger.info(f"work_date={work_date} week_number={week_number} location={location}")
 
+    # noinspection SqlNoDataSourceInspection
+    def get_year_average(self, year: int) -> float :
+        """Get the weekly average for the given year. The week is based off of
+        the year in the ISO week_number.
+        :param year: The four digit year for which to get the average
+        :return: The weekly average for the given year. If the year is not in
+        the database, None is returned.
+        """
+        res = self.cur.execute(
+            """
+            SELECT 
+                AVG(office_count)
+            FROM (
+                SELECT 
+                    week_number, 
+                    COUNT(location) as office_count    
+                FROM WorkDay
+                WHERE 
+                    week_number LIKE ? AND
+                    location = 'office'
+                GROUP BY week_number
+            )
+           """, (str(year) + '%',)
+        )
+        return res.fetchone()[0]
+
     def close(self) -> None:
         """
         Closes the connection to the database.
