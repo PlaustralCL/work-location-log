@@ -112,7 +112,6 @@ class Database:
         self.con.commit()
         logger.info(f"work_date={work_date} week_number={week_number} location={location}")
 
-    # noinspection SqlNoDataSourceInspection
     def get_ytd_average(self, year: int, end_week: str) -> float :
         """Get the weekly average for the given year, through the current date.
         If the year is complete, the average will be for the full year.
@@ -125,6 +124,8 @@ class Database:
         the database, None is returned.
         """
         start_week = str(year) + "-01"
+
+        # noinspection SqlNoDataSourceInspection
         res = self.cur.execute(
             """
             SELECT 
@@ -141,6 +142,25 @@ class Database:
                 GROUP BY week_number
             )
            """, (str(year), end_week)
+        )
+        return res.fetchone()[0]
+
+    def get_weekly_count(self, week_number: str) -> int :
+        """Returns the count of office days for the provided week.
+        :param week_number: The week to get the count of. The week is in the
+        format yyyy-ww
+        :return: The count of office days for the given week
+        """
+
+        # noinspection SqlNoDataSourceInspection
+        res = self.cur.execute(
+            """
+            SELECT COUNT(work_date)
+            FROM WorkDay
+            WHERE 
+                week_number = ? AND
+                location = 'office'
+            """, (week_number,)
         )
         return res.fetchone()[0]
 
