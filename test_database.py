@@ -144,8 +144,8 @@ class TestDatabase(unittest.TestCase):
 
 
     def test_get_year_average(self):
-        self.assertEqual(2.9,self.db.get_ytd_average(year=2024, end_week="2024-52"))
-        self.assertEqual(2.0, self.db.get_ytd_average(year=2023, end_week="2023-52"))
+        self.assertAlmostEqual(2.78,self.db.get_ytd_average(year=2024, end_week="2024-52"),delta=.01)
+        self.assertAlmostEqual(.15, self.db.get_ytd_average(year=2023, end_week="2023-52"), delta=.01)
         self.assertIsNone(self.db.get_ytd_average(year=2024, end_week="2023-50"))
 
 

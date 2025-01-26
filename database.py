@@ -130,20 +130,22 @@ class Database:
         # noinspection SqlNoDataSourceInspection
         res = self.cur.execute(
             """
-            SELECT 
-                AVG(office_count)
+            SELECT AVG(office_count)
             FROM (
                 SELECT 
-                    week_number, 
-                    COUNT(location) as office_count    
-                FROM WorkDay
+                    w.week_number,
+                    COUNT(
+                        CASE
+                            WHEN wd.location = 'office' THEN 1
+                            ELSE NULL	
+                        END
+                    ) as office_count                    
+                FROM Week as w LEFT OUTER JOIN WorkDay as wd on w.week_number = wd.week_number
                 WHERE 
-                    week_number >= ? AND
-                    week_number <= ? AND
-                    location = 'office'
-                GROUP BY week_number
-            )
-           """, (str(year), end_week)
+                    w.week_number BETWEEN ? AND ?
+                GROUP BY w.week_number
+            )            
+           """, (start_week, end_week)
         )
         return res.fetchone()[0]
 
