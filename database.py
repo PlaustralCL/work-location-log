@@ -121,7 +121,9 @@ class Database:
         :param end_week: The last week to include in the calculation, in ISO
         week format: yyyy-ww
         :return: The weekly average for the given year. If the year is not in
-        the database, None is returned.
+        the database, None is returned. If there is no data for the given range,
+        None is returned. If the end_week is before the provided year, None is
+        returned.
         """
         start_week = str(year) + "-01"
 
