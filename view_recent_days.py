@@ -1,4 +1,3 @@
-import sqlite3
 import tkinter as tk
 from tkinter import ttk
 from tkinter import messagebox
@@ -6,6 +5,7 @@ from database import Database
 from sqlite3 import IntegrityError
 
 class RecentDaysView(tk.Frame):
+    # TODO: Add class docstring
     def __init__(self, parent, *args, **kwargs):
         super().__init__(parent, *args, **kwargs)
 
@@ -27,6 +27,8 @@ class RecentDaysView(tk.Frame):
         for day in days:
             self.treeview.insert("", "end", values=day)
 
+        style = ttk.Style()
+        style.configure("Treeview", font=("TkDefaultFont", 12))
         self.treeview.pack()
 
         btn_style = ttk.Style()
@@ -67,7 +69,7 @@ class RecentDaysView(tk.Frame):
                 new_location = 'office'
             try:
                 self.db.set_location(work_date, new_location)
-            except sqlite3.IntegrityError:
+            except IntegrityError:
                 messagebox.showwarning(message=f"Not a valid location. No changes made.")
 
             workday = self.db.get_work_day(work_date)
@@ -83,7 +85,7 @@ class RecentDaysView(tk.Frame):
 if __name__ == "__main__":
     root = tk.Tk()
     root.title("Recent Days View")
-    root.geometry("300x500")
+    root.geometry("500x500")
     frame = RecentDaysView(root)
     root.protocol("WM_DELETE_WINDOW", frame.on_close)
     frame.pack()
