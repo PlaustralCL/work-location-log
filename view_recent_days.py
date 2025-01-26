@@ -1,8 +1,10 @@
 import tkinter as tk
 from tkinter import ttk
 from tkinter import messagebox
-from database import Database
 from sqlite3 import IntegrityError
+
+import constants
+from database import Database
 
 class RecentDaysView(tk.Frame):
     # TODO: Add class docstring
@@ -12,7 +14,7 @@ class RecentDaysView(tk.Frame):
         self.header_label = ttk.Label(self,
                                       text="Recent Days",
                                       padding=10,
-                                      font=("TkDefaultFont", 20))
+                                      font=("TkDefaultFont", constants.title_size))
         self.header_label.pack()
 
         self.db = Database()
@@ -28,7 +30,7 @@ class RecentDaysView(tk.Frame):
             self.treeview.insert("", "end", values=day)
 
         style = ttk.Style()
-        style.configure("Treeview", font=("TkDefaultFont", 12))
+        style.configure("Treeview", font=("TkDefaultFont", constants.treeview_size))
         self.treeview.pack()
 
         btn_style = ttk.Style()
