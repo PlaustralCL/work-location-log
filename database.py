@@ -87,6 +87,24 @@ class Database:
         )
         return res.fetchone()
 
+    def get_locations(self) -> list[str]:
+        """
+        Gets the locations from the location table.
+        :return: List of allowed locations
+        """
+
+        # noinspection SqlNoDataSourceInspection
+        res = self.cur.execute(
+            """
+            SELECT location
+            FROM Location
+            """
+        )
+        locations = []
+        for location in res.fetchall():
+            locations.append(location[0])
+        return locations
+
     def new_work_day(self, work_date: str, week_number: str, location: str) -> None:
         """
         Sets the work day information of the provided work_date
