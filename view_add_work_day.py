@@ -4,6 +4,7 @@ from tkinter import messagebox
 from datetime import date
 from datetime import timedelta
 
+import constants
 from database import Database
 
 class AddWorkDay(tk.Frame):
@@ -11,7 +12,107 @@ class AddWorkDay(tk.Frame):
         super().__init__(parent, *args, **kwargs)
         self.db = Database()
 
+        self.btn_style = ttk.Style()
+        self.btn_style.configure('daily_input.TButton',
+                                 font=("TkDefaultFont", constants.label_size))
+        self.radio_style = ttk.Style()
+        self.radio_style.configure("radio.TRadiobutton", font=('TkDefaultFont', constants.label_size))
 
+        self.title_label = ttk.Label(self, text="Add Work Day", font=("Arial", constants.title_size))
+        self.title_label.grid(column=1, row=1, columnspan=2)
+
+        self.working_date = date.today()
+        self.date_label = ttk.Label(self,
+                                    text=f"{self.working_date}",
+                                    padding=10,
+                                    font=("TkDefaultFont", constants.label_size))
+        self.plus_date_btn = ttk.Button(self,
+                                        text="+",
+                                        style='daily_input.TButton',
+                                        command=lambda: self.adjust_working_date(direction="add"))
+
+        self.minus_date_btn = ttk.Button(self,
+                                         text="-",
+                                         style='daily_input.TButton',
+                                         command=lambda: self.adjust_working_date(direction="minus"))
+
+        self.date_label.grid(column=1, row=2, columnspan=2)
+        self.minus_date_btn.grid(column=1, row=3)
+        self.plus_date_btn.grid(column=2, row=3)
+
+        self.office_btn = ttk.Button(self,
+                                     text="Office",
+                                     style='daily_input.TButton',
+                                     command=lambda: self.set_location('office'))
+
+        self.remote_btn = ttk.Button(self,
+                                     text="Remote",
+                                     style='daily_input.TButton',
+                                     command=lambda: self.set_location('remote'))
+
+        self.location = tk.StringVar(self)
+        self.radio_office = ttk.Radiobutton(self,
+                                            text="Office",
+                                            variable=self.location,
+                                            style='radio.TRadiobutton',
+                                            value='office',
+                                            )
+        self.radio_remote = ttk.Radiobutton(self,
+                                            text="Remote",
+                                            variable=self.location,
+                                            style='radio.TRadiobutton',
+                                            value='remote')
+        self.radio_office.grid(column=1, row=4)
+        self.radio_remote.grid(column=2, row=4)
+
+        self.plus_date_btn = ttk.Button(self,
+                                        text="Submit",
+                                        style='daily_input.TButton',
+                                        command=lambda: self.set_location(self.location.get()))
+        self.plus_date_btn.grid(column=1, row=5, columnspan=2)
+
+
+    def adjust_working_date(self, direction: str) -> None:
+        """Changes the working date based on the provided direction and updates
+        the date label accordingly.
+        :param direction: The direction for the change of working date. The
+        only allowed values are 'add' and 'minus'
+        """
+        if str(direction) == "add":
+            self.working_date += timedelta(days=1)
+        elif str(direction) == "minus":
+            self.working_date -= timedelta(days=1)
+        self.date_label.configure(text=f"{self.working_date}")
+
+
+    def set_location(self, location: str) -> None:
+        """
+        Updates the database with the given location. If a location has
+        already been saved for the current work_date, then a message box is
+        shown and no updates to the database are made. If updating the database
+        is successful, a message box will show that. Use the recent_days_view
+        if a revision to the location is needed. Returns immediately if no
+        location is provided or if the provided location is not in the
+        Location table of the database.
+        :param location: The work location for the current work day.
+        """
+        if location == '' or location not in self.db.get_locations():
+            return
+
+        work_date = self.working_date.isoformat()
+        iso_year = str(self.working_date.isocalendar().year)
+        iso_week = self.working_date.isocalendar().week
+        week_number = f'{iso_year}-{iso_week:>02}'
+        if not self.db.get_work_day(work_date=work_date):
+            self.db.new_work_day(work_date=work_date,
+                                 week_number=week_number,
+                                 location=location)
+            messagebox.showinfo(
+                message=f"Date: {self.working_date}\nLocation: {location.title()}\nAdded to the database")
+            self.working_date = date.today()
+            self.date_label.configure(text=f"{self.working_date}")
+        else:
+            messagebox.showerror(message=f"A location for {work_date} was already recorded.",)
 
 
     def on_close(self):
