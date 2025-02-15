@@ -71,6 +71,9 @@ class AddWorkDay(tk.Frame):
                                         command=lambda: self.set_location(self.location.get()))
         self.plus_date_btn.grid(column=1, row=5, columnspan=2)
 
+    def update(self):
+        self.working_date = date.today()
+        self.date_label.configure(text=f"{self.working_date}")
 
     def adjust_working_date(self, direction: str) -> None:
         """Changes the working date based on the provided direction and updates
@@ -109,8 +112,7 @@ class AddWorkDay(tk.Frame):
                                  location=location)
             messagebox.showinfo(
                 message=f"Date: {self.working_date}\nLocation: {location.title()}\nAdded to the database")
-            self.working_date = date.today()
-            self.date_label.configure(text=f"{self.working_date}")
+            self.update()
         else:
             messagebox.showerror(message=f"A location for {work_date} was already recorded.",)
 

@@ -26,8 +26,7 @@ class RecentDaysView(tk.Frame):
         self.treeview.heading('location', text="Location")
         self.treeview.column('date', width=100, anchor='center')
         self.treeview.column('location', width=100, anchor='center')
-        for day in days:
-            self.treeview.insert("", "end", values=day)
+        self.update()
 
         style = ttk.Style()
         style.configure("Treeview", font=("TkDefaultFont", constants.treeview_size))
@@ -42,7 +41,12 @@ class RecentDaysView(tk.Frame):
                          command=self.revise_location)
         self.btn.pack(pady=10)
 
-
+    def update(self):
+        for i in self.treeview.get_children():
+            self.treeview.delete(i)
+        days = self.db.get_recent_days()
+        for day in days:
+            self.treeview.insert("", "end", values=day)
 
     def get_selected_item_id(self) -> str:
         """
