@@ -10,17 +10,16 @@ from view_add_work_day import AddWorkDay
 class WorkLocation():
     def __init__(self, root):
         self.root = root
+        root.rowconfigure(1, weight=1)
 
-        self.frames = {'home': DashboardView(self.root),
-                       'recent_days': RecentDaysView(self.root),
-                       'add_day': AddWorkDay(self.root),}
+        self.content_frame = ttk.Frame(self.root)
+        self.content_frame.grid(column=1, row=1, sticky='n')
 
-        self.main_frame = self.frames['home']
-        # self.title_label = ttk.Label(self.main_frame,
-        #                              text="Main Frame",
-        #                              font=("Arial", constants.title_size))
-        # self.title_label.pack()
-        self.main_frame.grid(column=1, row=1, sticky='nsew')
+        self.frames = {'home': DashboardView(self.content_frame),
+                       'recent_days': RecentDaysView(self.content_frame),
+                       'add_day': AddWorkDay(self.content_frame), }
+        self.current_frame = self.frames['home']
+        self.current_frame.pack()
 
         self.nav_frame = tk.Frame(self.root)
         self.btn_style = ttk.Style()
@@ -51,17 +50,17 @@ class WorkLocation():
 
     def change_frame(self, frame: str) -> None:
         print(f"Change Frame: {frame}")
-        self.main_frame.grid_forget()
+        self.current_frame.pack_forget()
 
         if frame == 'home':
-            self.main_frame = self.frames['home']
+            self.current_frame = self.frames['home']
         elif frame == 'recent':
-            self.main_frame = self.frames['recent_days']
+            self.current_frame = self.frames['recent_days']
         elif frame == 'add_day':
-            self.main_frame = self.frames['add_day']
+            self.current_frame = self.frames['add_day']
 
-        self.main_frame.update()
-        self.main_frame.grid(column=1, row=1, sticky='nsew')
+        self.current_frame.update()
+        self.current_frame.pack()
 
 
 if __name__ == '__main__':
