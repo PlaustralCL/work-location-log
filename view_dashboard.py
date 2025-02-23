@@ -22,9 +22,9 @@ class DashboardView(tk.Frame):
         curr_week_label = ttk.Label(self, text="Current week:", font=("TkDefaultFont", constants.label_size))
         curr_week_label.grid(row=2, column=0, padx=10, pady=10)
 
-        self.update()
+        self.refresh()
 
-    def update(self):
+    def refresh(self):
         iso_year = date.today().isocalendar().year
         previous_iso_week = (date.today() - timedelta(weeks=1)).isocalendar().week
         previous_week_number = f"{iso_year}-{previous_iso_week:>02}"

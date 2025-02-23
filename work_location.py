@@ -59,7 +59,7 @@ class WorkLocation():
         elif frame == 'add_day':
             self.current_frame = self.frames['add_day']
 
-        self.current_frame.update()
+        self.current_frame.refresh()
         self.current_frame.pack()
 
 
