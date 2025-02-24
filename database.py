@@ -44,13 +44,18 @@ class Database:
                 w.week_number, 
                 w.week_start, 
                 w.week_end, 
-                COUNT(wd.work_date)
+                COUNT(
+                        CASE
+                            WHEN wd.location = 'office' THEN 1
+                            ELSE NULL	
+                        END
+                    ) as office_count
             FROM 
                 Week AS w 
                 LEFT OUTER JOIN WorkDay AS wd ON w.week_number = wd.week_number
             WHERE 
                 w.week_number >= ? AND 
-                w.week_number <= ?
+                w.week_number <= ? 
             GROUP BY w.week_number
            """, (start_week, end_week)
         )
