@@ -7,7 +7,7 @@ from datetime import date
 import constants
 from database import Database
 
-class WeeklySummaryView(tk.Frame):
+class WeeklySummary(tk.Frame):
     # TODO: Add class docstring
     def __init__(self, parent, *args, **kwargs):
         super().__init__(parent, *args, **kwargs)
@@ -89,7 +89,7 @@ if __name__ == "__main__":
     root = tk.Tk()
     root.title("Recent Days View")
     root.geometry("500x500")
-    frame = WeeklySummaryView(root)
+    frame = WeeklySummary(root)
     root.protocol("WM_DELETE_WINDOW", frame.on_close)
     frame.pack()
     root.mainloop()
