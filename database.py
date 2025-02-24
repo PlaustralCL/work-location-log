@@ -16,15 +16,48 @@ class Database:
         """
         Creates a connection to the database. The connection should be closed
         it is no longer needed by using the close() method.
-        :param file_path: A path the database file. A default path is using
-        worklocation.db is used is no parameter is passed.
+        :param file_path: A path the database file. A default path of
+        'Data/worklocation.db' is used if no parameter is passed.
         """
 
         self.con = sqlite3.connect(str(file_path))
         self.con.execute('PRAGMA foreign_keys = ON')
         self.cur = self.con.cursor()
 
-    def get_recent_days(self, num_of_days: int = 15) -> list:
+    def get_weekly_summary(self, start_week: str, end_week: str) -> list[tuple]:
+        """
+        Returns a list of tuples, where each tuple has the first date of the
+        week, the last date of the week, and the number of days in the office
+        for that week.
+        :param start_week: First week to collect data, in 'yyyy-ww' format
+        :param end_week: Last week to collect data, in 'yyyy-ww' format.
+        :return: List of tuples, where each tuple has the first date of the
+                week, the last date of the week, and the number of days in the
+                office for that week. Each tuple is (week number, week start
+                date, week end date, office count)
+        """
+
+        # noinspection SqlNoDataSourceInspection
+        res = self.cur.execute(
+            """
+            SELECT 
+                w.week_number, 
+                w.week_start, 
+                w.week_end, 
+                COUNT(wd.work_date)
+            FROM 
+                Week AS w 
+                LEFT OUTER JOIN WorkDay AS wd ON w.week_number = wd.week_number
+            WHERE 
+                w.week_number >= ? AND 
+                w.week_number <= ?
+            GROUP BY w.week_number
+           """, (start_week, end_week)
+        )
+        weeks = res.fetchall()
+        return weeks
+
+    def get_recent_days(self, num_of_days: int = 15) -> list[tuple[str, str]]:
         """
         Queries the database and returns the location data about the most
         recent work days. The number of days is determined by the num_of_days
