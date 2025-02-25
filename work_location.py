@@ -28,7 +28,13 @@ class WorkLocation():
         self.build_nav_buttons(self.nav_frame)
         self.nav_frame.grid(column=1, row=2, sticky='s')
 
-    def build_nav_buttons(self, parent):
+    def build_nav_buttons(self, parent) -> None:
+        """
+        Build the frame and buttons for the nav bar
+        :param parent: The parent frame
+        :return: None
+        """
+
         nav_buttons = tk.Frame(parent)
         btn_style = ttk.Style()
         btn_style.configure('btn.TButton',
@@ -63,6 +69,12 @@ class WorkLocation():
         nav_buttons.grid(column=1, row=2, sticky='nsew')
 
     def change_frame(self, frame: str) -> None:
+        """
+        Updates the content frame to show the requested frame/view. Before the
+        new frame is displayed, the contents are refreshed.
+        :param frame: The requested frame/view.
+        :return: None
+        """
         self.current_frame.pack_forget()
 
         if frame == 'home':
