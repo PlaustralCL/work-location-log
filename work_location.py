@@ -40,17 +40,19 @@ class WorkLocation():
                                        command=lambda: self.change_frame('home'))
         nav_home_btn.grid(column=1, row=1)
 
-        nav_recent_btn = ttk.Button(nav_buttons,
-                                         text="Recent",
-                                         style='btn.TButton',
-                                         command=lambda: self.change_frame('recent'))
-        nav_recent_btn.grid(column=2, row=1)
-
         nav_add_btn = ttk.Button(nav_buttons,
                                       text="Add Day",
                                       style='btn.TButton',
                                       command=lambda: self.change_frame('add_day'))
-        nav_add_btn.grid(column=3, row=1)
+        nav_add_btn.grid(column=2, row=1)
+
+        nav_recent_btn = ttk.Button(nav_buttons,
+                                         text="Recent",
+                                         style='btn.TButton',
+                                         command=lambda: self.change_frame('recent'))
+        nav_recent_btn.grid(column=3, row=1)
+
+
 
         nav_add_btn = ttk.Button(nav_buttons,
                                       text="Week",
@@ -59,10 +61,6 @@ class WorkLocation():
         nav_add_btn.grid(column=4, row=1)
 
         nav_buttons.grid(column=1, row=2, sticky='nsew')
-
-
-
-
 
     def change_frame(self, frame: str) -> None:
         self.current_frame.pack_forget()
