@@ -12,6 +12,7 @@ class WorkLocation():
     def __init__(self, root):
         self.root = root
         root.rowconfigure(1, weight=1)
+        root.grid_columnconfigure(1, weight=1)
 
         self.content_frame = tk.Frame(self.root)
         self.content_frame.grid(column=1, row=1, sticky='nsew')
@@ -25,9 +26,7 @@ class WorkLocation():
 
         self.nav_frame = tk.Frame(self.root)
         self.build_nav_buttons(self.nav_frame)
-        self.nav_frame.grid(column=1, row=2, sticky='nsew')
-
-
+        self.nav_frame.grid(column=1, row=2, sticky='s')
 
     def build_nav_buttons(self, parent):
         nav_buttons = tk.Frame(parent)
