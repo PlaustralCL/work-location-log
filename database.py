@@ -3,14 +3,14 @@ import sqlite3
 from pathlib import Path
 
 logger = logging.getLogger(__name__)
-# TODO: Add file for logging
 logging.basicConfig(
+    filename='./Data/work_location_log.txt',
+    filemode='a',
     level=logging.INFO,
     format='%(asctime)s | %(levelname)s | %(name)s.%(funcName)s | %(message)s',
     datefmt='%Y-%m-%d %H:%M:%S',
     )
 
-# TODO: Log changes to the database
 class Database:
     """
     Manage all queries to the database.
