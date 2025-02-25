@@ -12,6 +12,9 @@ logging.basicConfig(
 
 # TODO: Log changes to the database
 class Database:
+    """
+    Manage all queries to the database.
+    """
     def __init__(self, file_path: Path = Path('Data/worklocation.db')) -> None:
         """
         Creates a connection to the database. The connection should be closed

@@ -9,6 +9,10 @@ from database import Database
 
 
 class DashboardView(tk.Frame):
+    """
+    Show a dashboard with summary data: YTD average weekly attendance and the
+    days in the office for the current week.
+    """
     def __init__(self, parent, *args, **kwargs):
         super().__init__(parent, *args, **kwargs)
         self.db = Database()

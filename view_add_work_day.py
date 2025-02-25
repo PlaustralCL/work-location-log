@@ -8,6 +8,10 @@ import constants
 from database import Database
 
 class AddWorkDay(tk.Frame):
+    """
+    Create a frame that allows a work day to be added. The user can select the
+    date and the location that will be added to the database.
+    """
     def __init__(self, parent, *args, **kwargs):
         super().__init__(parent, *args, **kwargs)
         self.db = Database()

@@ -7,7 +7,12 @@ import constants
 from database import Database
 
 class RecentDaysView(tk.Frame):
-    # TODO: Add class docstring
+    """
+    Display a frame that shows location history for the most recent 15 days
+    that were recorded. Can update the location from office to remote using
+    the provided button. When toggled, the database is updated immediately
+    with the revised information.
+    """
     def __init__(self, parent, *args, **kwargs):
         super().__init__(parent, *args, **kwargs)
 

@@ -9,6 +9,10 @@ from view_weekly_summary import WeeklySummary
 
 
 class WorkLocation():
+    """
+    Main drive class for the application. Creates the main window and manages
+    the window.
+    """
     def __init__(self, root):
         self.root = root
         root.rowconfigure(1, weight=1)

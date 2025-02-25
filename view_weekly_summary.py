@@ -8,7 +8,9 @@ import constants
 from database import Database
 
 class WeeklySummary(tk.Frame):
-    # TODO: Add class docstring
+    """
+    Create a frame that shows a summary of the weekly data
+    """
     def __init__(self, parent, *args, **kwargs):
         super().__init__(parent, *args, **kwargs)
 
