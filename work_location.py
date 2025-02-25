@@ -13,8 +13,8 @@ class WorkLocation():
         self.root = root
         root.rowconfigure(1, weight=1)
 
-        self.content_frame = ttk.Frame(self.root)
-        self.content_frame.grid(column=1, row=1, sticky='n')
+        self.content_frame = tk.Frame(self.root)
+        self.content_frame.grid(column=1, row=1, sticky='nsew')
 
         self.frames = {'home': DashboardView(self.content_frame),
                        'recent_days': RecentDaysView(self.content_frame),
@@ -24,36 +24,45 @@ class WorkLocation():
         self.current_frame.pack()
 
         self.nav_frame = tk.Frame(self.root)
-        self.btn_style = ttk.Style()
-        self.btn_style.configure('btn.TButton',
+        self.build_nav_buttons(self.nav_frame)
+        self.nav_frame.grid(column=1, row=2, sticky='nsew')
+
+
+
+    def build_nav_buttons(self, parent):
+        nav_buttons = tk.Frame(parent)
+        btn_style = ttk.Style()
+        btn_style.configure('btn.TButton',
                                  font=("TkDefaultFont", constants.label_size))
 
-        self.nav_home_btn = ttk.Button(self.nav_frame,
+        nav_home_btn = ttk.Button(nav_buttons,
                                        text="Home",
                                        style='btn.TButton',
                                        command=lambda: self.change_frame('home'))
-        self.nav_home_btn.grid(column=1, row=1)
+        nav_home_btn.grid(column=1, row=1)
 
-        self.nav_recent_btn = ttk.Button(self.nav_frame,
+        nav_recent_btn = ttk.Button(nav_buttons,
                                          text="Recent",
                                          style='btn.TButton',
                                          command=lambda: self.change_frame('recent'))
-        self.nav_recent_btn.grid(column=2, row=1)
+        nav_recent_btn.grid(column=2, row=1)
 
-        self.nav_add_btn = ttk.Button(self.nav_frame,
-                                         text="Add Day",
-                                         style='btn.TButton',
-                                         command=lambda: self.change_frame('add_day'))
-        self.nav_add_btn.grid(column=3, row=1)
+        nav_add_btn = ttk.Button(nav_buttons,
+                                      text="Add Day",
+                                      style='btn.TButton',
+                                      command=lambda: self.change_frame('add_day'))
+        nav_add_btn.grid(column=3, row=1)
 
-        self.nav_add_btn = ttk.Button(self.nav_frame,
-                                         text="Week",
-                                         style='btn.TButton',
-                                         command=lambda: self.change_frame('weekly_summary'))
-        self.nav_add_btn.grid(column=4, row=1)
+        nav_add_btn = ttk.Button(nav_buttons,
+                                      text="Week",
+                                      style='btn.TButton',
+                                      command=lambda: self.change_frame('weekly_summary'))
+        nav_add_btn.grid(column=4, row=1)
+
+        nav_buttons.grid(column=1, row=2, sticky='nsew')
 
 
-        self.nav_frame.grid(column=1, row=2, sticky='nsew')
+
 
 
     def change_frame(self, frame: str) -> None:
