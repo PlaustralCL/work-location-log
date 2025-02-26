@@ -119,10 +119,11 @@ def fill_location_table() -> None:
     con.commit()
     con.close()
 
-def fill_workday_table() -> None:
+def import_data() -> None:
     """
-    Initialize the WorkDay table from the data in the
-    location.csv file.
+    Initialize the WorkDay table by importing from the data in the location.csv
+    file. It assumes the data is in the format "Year,Month,Day,Location" and
+    contains a header row.
     """
     data = []
     with open('Data/location.csv', "r") as f:
@@ -162,6 +163,6 @@ if __name__ == '__main__':
     create_tables()
     fill_week_table(start_year=2023, end_year=2027)
     fill_location_table()
-    fill_workday_table()
+    import_data()
 
 
