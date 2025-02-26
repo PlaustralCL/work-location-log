@@ -149,8 +149,10 @@ class TestDatabase(unittest.TestCase):
         self.assertIsNone(self.db.get_ytd_average(year=2024, end_week="2023-50"))
 
     def test_get_weekly_summary(self):
-        print(self.db.get_weekly_summary(start_week="2024-48", end_week="2024-52"))
-
+        weeks = self.db.get_weekly_summary(start_week="2024-48", end_week="2024-52")
+        self.assertEqual(5, len(weeks))
+        self.assertEqual('2024-52', weeks[-1][0])
+        self.assertEqual(0, weeks[-1][-1])
 
 
 
