@@ -25,10 +25,19 @@ The file `./Data/location.csv` is assumed to be in the format "Year,Month,Day,Lo
 
 When `db_setup.py` is initially run, an SQLite file will be created, if one does not already exist.
 The default location for the database file is `./Data/worklocation.db`.
-A log file is created at `./Data/work_location_log.txt`.
+
 
 ## Start
 To run the app, run `work_location.py`
+To facilitate daily data collection, there is a small "widget" that just collects the work location for the day and then closes.
+The widget is launched from the `daily_input.py`.
+It will show a small window that shows the current date and large buttons to allow the user to choose recording the location as "office" or "remote".
+Once the location is selected, the window will close automatically. This work flow is the simplest to automate.
+
+## Logging
+Changes and attempted changes to the database are tracked in a log file.
+The default location for the log file is `./Data/work_location_log.txt`.
+The location can be changed in the `database.py` file.
 
 ## Testing
 A test database is provided and can be used with the `test_database.py` file to run tests on the database queries. Tests are only provided for the database queries since that is where the majority of work is done. The rest of the app is just the GUI.
