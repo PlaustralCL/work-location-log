@@ -44,36 +44,26 @@ class AddWorkDay(tk.Frame):
         self.minus_date_btn.grid(column=1, row=3)
         self.plus_date_btn.grid(column=2, row=3)
 
-        self.office_btn = ttk.Button(self,
-                                     text="Office",
-                                     style='daily_input.TButton',
-                                     command=lambda: self.set_location('office'))
-
-        self.remote_btn = ttk.Button(self,
-                                     text="Remote",
-                                     style='daily_input.TButton',
-                                     command=lambda: self.set_location('remote'))
-
-        self.location = tk.StringVar(self)
+        self.radio_location = tk.StringVar(self)
         self.radio_office = ttk.Radiobutton(self,
                                             text="Office",
-                                            variable=self.location,
+                                            variable=self.radio_location,
                                             style='radio.TRadiobutton',
                                             value='office',
                                             )
         self.radio_remote = ttk.Radiobutton(self,
                                             text="Remote",
-                                            variable=self.location,
+                                            variable=self.radio_location,
                                             style='radio.TRadiobutton',
                                             value='remote')
         self.radio_office.grid(column=1, row=4)
         self.radio_remote.grid(column=2, row=4)
 
-        self.plus_date_btn = ttk.Button(self,
-                                        text="Submit",
-                                        style='daily_input.TButton',
-                                        command=lambda: self.set_location(self.location.get()))
-        self.plus_date_btn.grid(column=1, row=5, columnspan=2)
+        self.submit_btn = ttk.Button(self,
+                                     text="Submit",
+                                     style='daily_input.TButton',
+                                     command=lambda: self.set_location(self.radio_location.get()))
+        self.submit_btn.grid(column=1, row=5, columnspan=2)
 
     def refresh(self):
         self.working_date = date.today()
