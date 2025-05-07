@@ -6,6 +6,7 @@ from datetime import timedelta
 
 import constants
 from database import Database
+import ytd_html_report
 
 class AddWorkDay(tk.Frame):
     """
@@ -110,6 +111,7 @@ class AddWorkDay(tk.Frame):
         else:
             messagebox.showerror(message=f"A location for {work_date} was already recorded.",)
 
+        ytd_html_report.generate_report()
 
     def on_close(self):
         self.db.close()

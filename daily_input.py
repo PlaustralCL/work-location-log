@@ -4,6 +4,7 @@ from tkinter import messagebox
 from datetime import date
 
 from database import Database
+import ytd_html_report
 
 class DailyInput(tk.Tk):
     """
@@ -62,6 +63,8 @@ class DailyInput(tk.Tk):
                                  location=location)
         else:
             messagebox.showinfo(message=f"A location for {work_date} was already recorded.")
+
+        ytd_html_report.generate_report()
 
         self.db.close()
         self.destroy()

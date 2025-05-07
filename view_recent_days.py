@@ -5,6 +5,7 @@ from sqlite3 import IntegrityError
 
 import constants
 from database import Database
+import ytd_html_report
 
 class RecentDaysView(tk.Frame):
     """
@@ -86,6 +87,8 @@ class RecentDaysView(tk.Frame):
             workday = self.db.get_work_day(work_date)
             location = workday[2]
             self.treeview.item(item_id, values=(work_date, location))
+
+            ytd_html_report.generate_report()
 
     def on_close(self):
         self.db.close()
