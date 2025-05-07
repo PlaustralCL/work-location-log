@@ -176,7 +176,7 @@ class Database:
         If the year is complete, the average will be for the full year.
         A week is determined to be in a given year based on the year of ISO
         week.
-        :param year: The year to calculate the average for
+        :param year: The four-digit year to calculate the average for
         :param end_week: The last week to include in the calculation, in ISO
         week format: yyyy-ww
         :return: The weekly average for the given year. If the year is not in
