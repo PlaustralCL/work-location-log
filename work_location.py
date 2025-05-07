@@ -5,7 +5,7 @@ import constants
 from view_recent_days import RecentDaysView
 from view_dashboard import DashboardView
 from view_add_work_day import AddWorkDay
-from view_weekly_summary import WeeklySummary
+from view_ytd_summary import YTDSummary
 
 
 class WorkLocation():
@@ -24,7 +24,7 @@ class WorkLocation():
         self.frames = {'home': DashboardView(self.content_frame),
                        'recent_days': RecentDaysView(self.content_frame),
                        'add_day': AddWorkDay(self.content_frame),
-                       'weekly_summary': WeeklySummary(self.content_frame),}
+                       'ytd_summary': YTDSummary(self.content_frame), }
         self.current_frame = self.frames['home']
         self.current_frame.pack()
 
@@ -65,9 +65,9 @@ class WorkLocation():
 
 
         nav_add_btn = ttk.Button(nav_buttons,
-                                      text="Week",
+                                      text="YTD",
                                       style='btn.TButton',
-                                      command=lambda: self.change_frame('weekly_summary'))
+                                      command=lambda: self.change_frame('ytd_summary'))
         nav_add_btn.grid(column=4, row=1)
 
         nav_buttons.grid(column=1, row=2, sticky='nsew')
@@ -87,8 +87,8 @@ class WorkLocation():
             self.current_frame = self.frames['recent_days']
         elif frame == 'add_day':
             self.current_frame = self.frames['add_day']
-        elif frame == 'weekly_summary':
-            self.current_frame = self.frames['weekly_summary']
+        elif frame == 'ytd_summary':
+            self.current_frame = self.frames['ytd_summary']
 
         self.current_frame.refresh()
         self.current_frame.pack()

@@ -7,9 +7,9 @@ from datetime import date
 import constants
 from database import Database
 
-class WeeklySummary(tk.Frame):
+class YTDSummary(tk.Frame):
     """
-    Create a frame that shows a summary of the weekly data
+    Create a frame that shows a YTD summary of the weekly data
     """
     def __init__(self, parent, *args, **kwargs):
         super().__init__(parent, *args, **kwargs)
@@ -91,7 +91,7 @@ if __name__ == "__main__":
     root = tk.Tk()
     root.title("Recent Days View")
     root.geometry("500x500")
-    frame = WeeklySummary(root)
+    frame = YTDSummary(root)
     root.protocol("WM_DELETE_WINDOW", frame.on_close)
     frame.pack()
     root.mainloop()
